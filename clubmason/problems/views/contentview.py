@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from datetime import datetime
 
 from problems.models.content import Content
 from problems.serializers import ContentSerializer
@@ -20,6 +21,7 @@ class ContentsAPI(APIView):
     def post(self, request, format = None):
         contentSerializer = ContentSerializer(data = request.data)
         if contentSerializer.is_valid():
-            contentSerializer.save()
+            now = datetime.now()
+            contentSerializer.save(created = now, last_modified = now)
             return Response(status=status.HTTP_201_CREATED)
         return Response(contentSerializer.errors, status = status.HTTP_400_BAD_REQUEST)
